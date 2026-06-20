@@ -7,6 +7,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // DOM Elements
     const refreshBtn = document.getElementById('refresh-btn');
+    const exportCsvBtn = document.getElementById('export-csv-btn');
     const searchInput = document.getElementById('search-input');
     const filterChips = document.querySelectorAll('.filter-chip');
     const loadingState = document.getElementById('loading-state');
@@ -46,6 +47,8 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     retryBtn.addEventListener('click', fetchReleaseNotes);
+
+    exportCsvBtn.addEventListener('click', exportToCSV);
 
     searchInput.addEventListener('input', (e) => {
         searchQuery = e.target.value.toLowerCase();
@@ -228,6 +231,11 @@ document.addEventListener('DOMContentLoaded', () => {
                         <span class="select-label">${isSelected ? 'Selected' : 'Select to Tweet'}</span>
                     </div>
                     <div class="card-actions">
+                        <button class="action-btn-circle copy-btn" title="Copy text to clipboard">
+                            <svg viewBox="0 0 24 24" width="14" height="14">
+                                <path d="M16 1H4c-1.1 0-2 .9-2 2v14h2V3h12V1zm3 4H8c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h11c1.1 0 2-.9 2-2V7c0-1.1-.9-2-2-2zm0 16H8V7h11v14z"/>
+                            </svg>
+                        </button>
                         <button class="action-btn-circle tweet-btn" title="Tweet this update directly">
                             <svg viewBox="0 0 24 24" width="14" height="14">
                                 <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/>
@@ -248,9 +256,15 @@ document.addEventListener('DOMContentLoaded', () => {
 
             // Card click handlers
             card.addEventListener('click', (e) => {
-                // Prevent trigger when clicking links or individual tweet button
-                if (e.target.closest('a') || e.target.closest('.tweet-btn')) return;
+                // Prevent trigger when clicking links or individual action buttons
+                if (e.target.closest('a') || e.target.closest('.tweet-btn') || e.target.closest('.copy-btn')) return;
                 toggleSelectCard(update);
+            });
+
+            // Copy button click handler
+            card.querySelector('.copy-btn').addEventListener('click', (e) => {
+                e.stopPropagation();
+                copyToClipboard(update, card.querySelector('.copy-btn'));
             });
 
             // Individual tweet button click handler
@@ -331,6 +345,71 @@ document.addEventListener('DOMContentLoaded', () => {
         } else if (len > 280) {
             charCounterWrapper.classList.add('danger');
         }
+    }
+
+    function copyToClipboard(update, button) {
+        const textToCopy = `[BigQuery ${update.type} - ${update.date}]\n${update.text.replace(/\s+/g, ' ').trim()}\n\nSource: ${update.link}`;
+        
+        navigator.clipboard.writeText(textToCopy).then(() => {
+            const originalHTML = button.innerHTML;
+            button.innerHTML = `
+                <svg viewBox="0 0 24 24" width="14" height="14" style="fill: #10b981;">
+                    <path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/>
+                </svg>
+            `;
+            button.style.borderColor = 'rgba(16, 185, 129, 0.4)';
+            button.style.backgroundColor = 'rgba(16, 185, 129, 0.15)';
+            button.style.color = '#10b981';
+            button.title = "Copied!";
+            
+            setTimeout(() => {
+                button.innerHTML = originalHTML;
+                button.style.borderColor = '';
+                button.style.backgroundColor = '';
+                button.style.color = '';
+                button.title = "Copy text to clipboard";
+            }, 2000);
+        }).catch(err => {
+            console.error('Could not copy text: ', err);
+            alert('Failed to copy to clipboard.');
+        });
+    }
+
+    function exportToCSV() {
+        const filtered = allUpdates.filter(u => {
+            const matchesType = activeFilter === 'all' || u.type === activeFilter;
+            const matchesSearch = u.text.toLowerCase().includes(searchQuery) || 
+                                 u.type.toLowerCase().includes(searchQuery) ||
+                                 u.date.toLowerCase().includes(searchQuery);
+            return matchesType && matchesSearch;
+        });
+
+        if (filtered.length === 0) {
+            alert('No records available to export.');
+            return;
+        }
+
+        const csvHeaders = ['Date', 'Category', 'Update Text', 'Link'];
+        const csvRows = [csvHeaders.join(',')];
+
+        filtered.forEach(u => {
+            const date = `"${u.date.replace(/"/g, '""')}"`;
+            const type = `"${u.type.replace(/"/g, '""')}"`;
+            const text = `"${u.text.replace(/\s+/g, ' ').replace(/"/g, '""').trim()}"`;
+            const link = `"${u.link.replace(/"/g, '""')}"`;
+            csvRows.push([date, type, text, link].join(','));
+        });
+
+        const csvString = csvRows.join('\n');
+        const blob = new Blob([csvString], { type: 'text/csv;charset=utf-8;' });
+        const url = URL.createObjectURL(blob);
+        const link = document.createElement('a');
+        link.setAttribute('href', url);
+        link.setAttribute('download', `bigquery_release_notes_${activeFilter}_${new Date().toISOString().split('T')[0]}.csv`);
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+        URL.revokeObjectURL(url);
     }
 
     // UI State Toggles
