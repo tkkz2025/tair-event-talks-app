@@ -741,3 +741,54 @@ body {
     gap: 0.5rem;
     align-items: center;
 }
+
+/* Beautiful Theme Toggle Button & Morphing Icons */
+#theme-toggle-btn {
+    position: relative;
+    overflow: hidden;
+    background: var(--bg-card);
+    border: 1px solid var(--border-color);
+    box-shadow: var(--shadow-sm);
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    color: var(--text-secondary);
+}
+
+#theme-toggle-btn:hover {
+    transform: scale(1.08) rotate(15deg);
+    border-color: var(--border-hover);
+    box-shadow: var(--shadow-glow);
+    color: var(--text-primary);
+}
+
+.theme-icon-sun, .theme-icon-moon {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%) rotate(0deg) scale(1);
+    transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+    fill: currentColor;
+}
+
+/* Dark Mode (Default): Moon is visible, Sun is hidden (shrunk and rotated) */
+.theme-icon-sun {
+    opacity: 0;
+    transform: translate(-50%, -50%) rotate(-90deg) scale(0.3);
+    color: #f59e0b; /* Warm orange/yellow */
+}
+
+.theme-icon-moon {
+    opacity: 1;
+    transform: translate(-50%, -50%) rotate(0deg) scale(1);
+    color: #60a5fa; /* Cool blue moon */
+}
+
+/* Light Mode overrides via class hierarchy */
+body.light-theme .theme-icon-moon {
+    opacity: 0;
+    transform: translate(-50%, -50%) rotate(90deg) scale(0.3);
+}
+
+body.light-theme .theme-icon-sun {
+    opacity: 1;
+    transform: translate(-50%, -50%) rotate(0deg) scale(1);
+}

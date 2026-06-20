@@ -420,12 +420,8 @@ document.addEventListener('DOMContentLoaded', () => {
         const savedTheme = localStorage.getItem('theme') || 'dark';
         if (savedTheme === 'light') {
             document.body.classList.add('light-theme');
-            themeToggleBtn.querySelector('.theme-icon-sun').style.display = 'inline-block';
-            themeToggleBtn.querySelector('.theme-icon-moon').style.display = 'none';
         } else {
             document.body.classList.remove('light-theme');
-            themeToggleBtn.querySelector('.theme-icon-sun').style.display = 'none';
-            themeToggleBtn.querySelector('.theme-icon-moon').style.display = 'inline-block';
         }
     }
 
@@ -434,13 +430,9 @@ document.addEventListener('DOMContentLoaded', () => {
         if (isCurrentlyLight) {
             document.body.classList.remove('light-theme');
             localStorage.setItem('theme', 'dark');
-            themeToggleBtn.querySelector('.theme-icon-sun').style.display = 'none';
-            themeToggleBtn.querySelector('.theme-icon-moon').style.display = 'inline-block';
         } else {
             document.body.classList.add('light-theme');
             localStorage.setItem('theme', 'light');
-            themeToggleBtn.querySelector('.theme-icon-sun').style.display = 'inline-block';
-            themeToggleBtn.querySelector('.theme-icon-moon').style.display = 'none';
         }
     }
 
