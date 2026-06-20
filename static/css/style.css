@@ -12,7 +12,7 @@
     
     --color-primary: #3b82f6; /* Google Cloud Blue */
     --color-primary-hover: #60a5fa;
-    --color-twitter: #f3f4f6; /* Twitter/X Dark Mode Style (White/Light Grey) */
+    --color-twitter: #f3f4f6; /* Twitter/X Dark Mode Style */
     --color-twitter-hover: #e5e7eb;
     --color-twitter-bg: #1d9bf0;
     
@@ -31,6 +31,57 @@
     
     --font-heading: 'Outfit', 'Inter', -apple-system, sans-serif;
     --font-body: 'Inter', -apple-system, sans-serif;
+
+    /* Theme-specific variables */
+    --bg-input: rgba(17, 24, 39, 0.6);
+    --bg-input-focus: rgba(17, 24, 39, 0.8);
+    --bg-chip: rgba(255, 255, 255, 0.03);
+    --bg-chip-hover: rgba(255, 255, 255, 0.08);
+    --bg-code: rgba(0, 0, 0, 0.3);
+    --color-code: #fca5a5;
+    --bg-action-btn: rgba(255, 255, 255, 0.03);
+    --bg-drawer: rgba(15, 23, 42, 0.9);
+    --border-drawer: rgba(255, 255, 255, 0.12);
+    --bg-textarea: rgba(0, 0, 0, 0.2);
+    --title-gradient: linear-gradient(135deg, #ffffff 0%, #a5f3fc 100%);
+    --bg-gradient-1: rgba(59, 130, 246, 0.08);
+    --bg-gradient-2: rgba(139, 92, 246, 0.05);
+}
+
+/* Light Theme Variables */
+body.light-theme {
+    --bg-app: #f8fafc; /* slate-50 */
+    --bg-card: rgba(255, 255, 255, 0.85);
+    --bg-header: rgba(255, 255, 255, 0.9);
+    --border-color: rgba(15, 23, 42, 0.08);
+    --border-hover: rgba(59, 130, 246, 0.6);
+    
+    --text-primary: #0f172a; /* slate-900 */
+    --text-secondary: #475569; /* slate-600 */
+    --text-muted: #64748b; /* slate-500 */
+    
+    --color-primary: #2563eb; /* slate-600 dark blue */
+    --color-primary-hover: #1d4ed8;
+    --color-twitter: #0f172a;
+    --color-twitter-hover: #1e293b;
+    
+    --shadow-md: 0 4px 6px -1px rgba(15, 23, 42, 0.05), 0 2px 4px -1px rgba(15, 23, 42, 0.03);
+    --shadow-lg: 0 10px 15px -3px rgba(15, 23, 42, 0.05), 0 4px 6px -2px rgba(15, 23, 42, 0.03);
+    --shadow-glow: 0 0 15px rgba(37, 99, 235, 0.08);
+
+    --bg-input: rgba(255, 255, 255, 0.9);
+    --bg-input-focus: #ffffff;
+    --bg-chip: rgba(15, 23, 42, 0.04);
+    --bg-chip-hover: rgba(15, 23, 42, 0.08);
+    --bg-code: rgba(15, 23, 42, 0.05);
+    --color-code: #dc2626; /* reddish in light mode */
+    --bg-action-btn: rgba(15, 23, 42, 0.03);
+    --bg-drawer: rgba(255, 255, 255, 0.95);
+    --border-drawer: rgba(15, 23, 42, 0.12);
+    --bg-textarea: rgba(15, 23, 42, 0.03);
+    --title-gradient: linear-gradient(135deg, #0f172a 0%, #1e3a8a 100%);
+    --bg-gradient-1: rgba(59, 130, 246, 0.04);
+    --bg-gradient-2: rgba(139, 92, 246, 0.03);
 }
 
 /* Base Styles */
@@ -47,10 +98,11 @@ body {
     line-height: 1.5;
     -webkit-font-smoothing: antialiased;
     background-image: 
-        radial-gradient(at 0% 0%, rgba(59, 130, 246, 0.08) 0px, transparent 50%),
-        radial-gradient(at 100% 100%, rgba(139, 92, 246, 0.05) 0px, transparent 50%);
+        radial-gradient(at 0% 0%, var(--bg-gradient-1) 0px, transparent 50%),
+        radial-gradient(at 100% 100%, var(--bg-gradient-2) 0px, transparent 50%);
     background-attachment: fixed;
     min-height: 100vh;
+    transition: background-color 0.3s ease, color 0.3s ease;
 }
 
 /* App Container */
@@ -108,7 +160,7 @@ body {
     font-size: 1.5rem;
     font-weight: 700;
     letter-spacing: -0.025em;
-    background: linear-gradient(135deg, #ffffff 0%, #a5f3fc 100%);
+    background: var(--title-gradient);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
 }
@@ -257,7 +309,7 @@ body {
 
 .search-box input {
     width: 100%;
-    background-color: rgba(17, 24, 39, 0.6);
+    background-color: var(--bg-input);
     border: 1px solid var(--border-color);
     border-radius: 10px;
     padding: 0.625rem 1rem 0.625rem 2.5rem;
@@ -271,7 +323,7 @@ body {
     outline: none;
     border-color: var(--color-primary);
     box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.2);
-    background-color: rgba(17, 24, 39, 0.8);
+    background-color: var(--bg-input-focus);
 }
 
 .filter-group {
@@ -281,7 +333,7 @@ body {
 }
 
 .filter-chip {
-    background: rgba(255, 255, 255, 0.03);
+    background: var(--bg-chip);
     border: 1px solid var(--border-color);
     color: var(--text-secondary);
     padding: 0.5rem 1rem;
@@ -293,7 +345,7 @@ body {
 }
 
 .filter-chip:hover {
-    background: rgba(255, 255, 255, 0.08);
+    background: var(--bg-chip-hover);
     color: var(--text-primary);
 }
 
@@ -410,10 +462,10 @@ body {
 
 .card-body code {
     font-family: monospace;
-    background: rgba(0, 0, 0, 0.3);
+    background: var(--bg-code);
     padding: 0.125rem 0.25rem;
     border-radius: 4px;
-    color: #fca5a5;
+    color: var(--color-code);
     font-size: 0.8125rem;
     border: 1px solid rgba(255, 255, 255, 0.05);
 }
@@ -493,7 +545,7 @@ body {
     width: 32px;
     height: 32px;
     border-radius: 50%;
-    background: rgba(255, 255, 255, 0.03);
+    background: var(--bg-action-btn);
     border: 1px solid var(--border-color);
     display: flex;
     align-items: center;
@@ -575,10 +627,10 @@ body {
     transform: translateX(-50%);
     width: calc(100% - 48px);
     max-width: 600px;
-    background: rgba(15, 23, 42, 0.9);
+    background: var(--bg-drawer);
     backdrop-filter: blur(16px);
     -webkit-backdrop-filter: blur(16px);
-    border: 1px solid rgba(255, 255, 255, 0.12);
+    border: 1px solid var(--border-drawer);
     box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.5), 0 0 25px rgba(59, 130, 246, 0.1);
     border-radius: 16px;
     z-index: 1000;
@@ -638,7 +690,7 @@ body {
 }
 
 .close-btn:hover {
-    background: rgba(255, 255, 255, 0.08);
+    background: var(--bg-chip-hover);
     color: var(--text-primary);
 }
 
@@ -648,7 +700,7 @@ body {
 
 .drawer-body textarea {
     width: 100%;
-    background: rgba(0, 0, 0, 0.2);
+    background: var(--bg-textarea);
     border: 1px solid var(--border-color);
     border-radius: 8px;
     color: var(--text-primary);

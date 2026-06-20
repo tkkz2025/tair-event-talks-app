@@ -7,6 +7,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // DOM Elements
     const refreshBtn = document.getElementById('refresh-btn');
+    const themeToggleBtn = document.getElementById('theme-toggle-btn');
     const exportCsvBtn = document.getElementById('export-csv-btn');
     const searchInput = document.getElementById('search-input');
     const filterChips = document.querySelectorAll('.filter-chip');
@@ -33,6 +34,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const tweetSubmitBtn = document.getElementById('tweet-submit-btn');
 
     // Initialize
+    initializeTheme();
     fetchReleaseNotes();
 
     // Event Listeners
@@ -49,6 +51,8 @@ document.addEventListener('DOMContentLoaded', () => {
     retryBtn.addEventListener('click', fetchReleaseNotes);
 
     exportCsvBtn.addEventListener('click', exportToCSV);
+
+    themeToggleBtn.addEventListener('click', toggleTheme);
 
     searchInput.addEventListener('input', (e) => {
         searchQuery = e.target.value.toLowerCase();
@@ -410,6 +414,34 @@ document.addEventListener('DOMContentLoaded', () => {
         link.click();
         document.body.removeChild(link);
         URL.revokeObjectURL(url);
+    }
+
+    function initializeTheme() {
+        const savedTheme = localStorage.getItem('theme') || 'dark';
+        if (savedTheme === 'light') {
+            document.body.classList.add('light-theme');
+            themeToggleBtn.querySelector('.theme-icon-sun').style.display = 'inline-block';
+            themeToggleBtn.querySelector('.theme-icon-moon').style.display = 'none';
+        } else {
+            document.body.classList.remove('light-theme');
+            themeToggleBtn.querySelector('.theme-icon-sun').style.display = 'none';
+            themeToggleBtn.querySelector('.theme-icon-moon').style.display = 'inline-block';
+        }
+    }
+
+    function toggleTheme() {
+        const isCurrentlyLight = document.body.classList.contains('light-theme');
+        if (isCurrentlyLight) {
+            document.body.classList.remove('light-theme');
+            localStorage.setItem('theme', 'dark');
+            themeToggleBtn.querySelector('.theme-icon-sun').style.display = 'none';
+            themeToggleBtn.querySelector('.theme-icon-moon').style.display = 'inline-block';
+        } else {
+            document.body.classList.add('light-theme');
+            localStorage.setItem('theme', 'light');
+            themeToggleBtn.querySelector('.theme-icon-sun').style.display = 'inline-block';
+            themeToggleBtn.querySelector('.theme-icon-moon').style.display = 'none';
+        }
     }
 
     // UI State Toggles
